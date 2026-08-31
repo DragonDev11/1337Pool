@@ -6,7 +6,7 @@
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/31 14:16:36 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/08/31 15:52:34 by mhmichi          ###   ########.fr       */
+/*   Updated: 2026/08/31 16:35:29 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@
 typedef struct FT_FILE
 {
 	int		fd;
-	char	*buffer;
 	int		offset;
+	int		size;
+	char	*buffer;
+	char	*path;
 }	FT_FILE;
 
 unsigned int	ft_read(unsigned int buffer_size, char *buffer, FT_FILE file);
@@ -27,5 +29,5 @@ FT_FILE		ft_open(char *path, char *modes);
 unsigned int	ft_close(FT_FILE file);
 unsigned int	ft_write(unsigned int buffer_size, char *buffer, FT_FILE file);
 char		ft_is_file_valid(FT_FILE file);
-#endif:w
+#endif
 
