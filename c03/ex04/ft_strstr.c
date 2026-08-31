@@ -6,7 +6,7 @@
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/18 12:08:12 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/08/25 17:33:43 by mhmichi          ###   ########.fr       */
+/*   Updated: 2026/08/31 11:14:58 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,11 @@ char	*ft_strstr(char *str, char *to_find)
 		}
 		i = i - j + 1;
 	}
+	return (0);
+}
+int	main(void)
+{
+	char *x = ft_strstr("hello world", "world");
+	printf("%s\n", x);
 	return (0);
 }
