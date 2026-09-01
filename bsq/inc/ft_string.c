@@ -6,12 +6,17 @@
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/31 14:09:43 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/08/31 14:15:16 by mhmichi          ###   ########.fr       */
+/*   Updated: 2026/08/31 18:45:56 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_string.h"
 #include <stdlib.h>
+
+char	ft_is_printable(char c)
+{
+	return (c >= 32 && c <= 126);
+}
 
 int	ft_str_contains(char c, char *str)
 {

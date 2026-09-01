@@ -6,7 +6,7 @@
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/31 14:17:10 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/08/31 17:47:02 by mhmichi          ###   ########.fr       */
+/*   Updated: 2026/08/31 21:58:55 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ FT_FILE	ft_open(char *path, char *modes)
 		return (NULL);
 	file_names = ft_split(path, "/");
 	if (file_names == NULL)
-		ft_putstr("Warning: Failed to check the path\nfuck it, continuing anyways.\n");
+		ft_putstr("Warning: Failed to check the path\nfix it, continuing anyways.\n");
 	else
 	{
 		while (*file_names)
@@ -33,15 +33,13 @@ FT_FILE	ft_open(char *path, char *modes)
 			{
 				ft_putstr("Error: Invalid file name ");
 				ft_putstr(*file_names);
-				ft_putstr("\nfuck you, enter a valid path.\n");
+				ft_putstr("\nfix it, enter a valid path.\n");
 				return (NULL);
 			}
 			file_names++;
 		}
 	}
 	free(file_names);
-	if (!(*modes))
-		return (-1);
 	if (ft_strlen(modes) != 2)
 		return (-1);
 	file = (FT_FILE *)malloc(sizeof(FT_FILE));
@@ -65,7 +63,7 @@ FT_FILE	ft_open(char *path, char *modes)
 	return (file);
 }
 
-int	ft_read(unsigned int size, char *buffer, FT_FILE file)
+int	ft_fread(unsigned int size, char *buffer, FT_FILE file)
 {
 	int	bytes_read;
 
@@ -73,16 +71,18 @@ int	ft_read(unsigned int size, char *buffer, FT_FILE file)
 		return (-1);
 	if (file->fd == -1)
 		return (-1);
-	if (buffer != NULL)
+	if (buffer)
 		free(buffer);
 	buffer = malloc(sizeof(char) * size);
-	if (file->buffer == NULL)
+	if (buffer == NULL)
 		return (-1);
 	bytes_read = read(file->fd, buffer, size);
-	file->offset += bytes_read;
-	if (file->offset > file->size)
-		file->size = file->offset;
-	return (bytes_read);
+	if (bytes_read != -1)
+	{
+		file->offset += bytes_read;
+		return (bytes_read);
+	}
+	return (-1);
 }
 
 int	ft_write(unsigned int size, char *buffer, FT_FILE file)
@@ -91,15 +91,15 @@ int	ft_write(unsigned int size, char *buffer, FT_FILE file)
 
 	if (file == NULL)
 		return (-1);
-	if (file->fd == NULL)
+	if (file->fd == -1)
 		return (-1);
 	bytes_written = write(file->fd, buffer, size);
-	if (bytes_written == -1)
+	if (bytes_written != -1)
+	{
+		file->offset += bytes_written;
 		return (bytes_written);
-	file->offset += bytes_written;
-	if (file->offset > file->length)
-		file->size = file->offset;
-	return (bytes_written);
+	}
+	return (-1);
 }
 
 int	ft_close(FT_FILE file)
@@ -221,54 +221,54 @@ char	ft_is_file_valid(FT_FILE file)
 	while (lines[i])
 		i++;
 	actual_height = i - 1;
+	i = 0;
 	while (lines[i])
 	{
-		j == 0;
+		j = 0;
 		if (i == 0)
 		{
-			while((*lines)[i][j] >= '0' && (*lines)[i][j] <= '9')
+			while(lines[i][j] >= '0' && lines[i][j] <= '9')
 				j++;
-			num_str = ft_strndup((*lines)[i], j);
+			num_str = ft_strndup(lines[i], j);
 			if (num_str == NULL)
 				return (NULL);
 			expected_height = ft_atoi(num_str);
 			free(num_str);
-			if (actual_heig
-			if (j == 0)
+			if (actual_height != expected_height || j == 0)
 			{
-				free_double_pointer((void *)lines, )
+				free_double_pointer((void **)lines, actual_height + 1, sizeof(char *));
 				return (0);
 			}
 			k = j + 4;
 			while (j < k - 1)
 			{
-				if (!is_printable((*lines)[i][j]) || (*lines)[i][j] == '\n')
+				if (!ft_is_printable(lines[i][j]) || lines[i][j] == '\n')
 				{
-					free_double_pointer(lines);
+					free_double_pointer((void **)lines, actual_height + 1, sizeof(char *));
 					return (0);
 				}
-				charset[ABS(k - 2 - j)] = (*lines)[i][j];
+				charset[ABS(k - 2 - j)] = lines[i][j];
 				j++;
 			}
 			charset[3] = '\0';
-			if ((*lines)[i][j] != '\n')
+			if (lines[i][j] != '\n')
 			{
-				free_double_pointer(lines);
+				free_double_pointer((void **)lines, actual_height + 1, sizeof(char *));
 				return (0);
 			}
 		}
-		while (ft_str_contains((*lines)[i][j], charset) && (*lines)[i][j])
+		while (ft_str_contains(lines[i][j], charset) && lines[i][j])
 			j++;
 		if (width == 0)
 			width = j;
 		if (j != width)
 		{
-			free_double_pointer(lines);
+			free_double_pointer((void **)lines, actual_height + 1, sizeof(char *));
 			return (0);
 		}
 		i++;
 	}
-	free_double_pointer(lines);
+	free_double_pointer((void **)lines, actual_height + 1, sizeof(char *));
 	if (i != height)
 		return (0);
 	return (1);

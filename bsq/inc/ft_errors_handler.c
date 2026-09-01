@@ -6,19 +6,22 @@
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/31 17:41:40 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/08/31 17:43:02 by mhmichi          ###   ########.fr       */
+/*   Updated: 2026/08/31 21:02:46 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "ft_errors_handler.h"
 
-void	free_double_pointer(void **p, unsigned int elements)
+void	free_double_pointer(void **p, unsigned int elements, unsigned int element_size)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
-	while (i < elements)
-		free(p[i++]);
+	while (i < elements && *(p + i))
+	{
+		free(*(p + i));
+		i += element_size;
+	}
 	free(p);
 }
