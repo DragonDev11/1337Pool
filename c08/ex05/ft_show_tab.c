@@ -6,7 +6,7 @@
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 09:43:40 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/08/31 09:38:15 by mhmichi          ###   ########.fr       */
+/*   Updated: 2026/09/01 12:55:41 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	ft_putnbr(int nb)
 
 void	ft_show_tab(struct s_stock_str *par)
 {
-	while ((*par).str != 0)
+	while ((*par).str)
 	{
 		ft_putstr((*par).str);
 		ft_putchar('\n');

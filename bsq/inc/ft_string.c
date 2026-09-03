@@ -6,12 +6,34 @@
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/31 14:09:43 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/08/31 18:45:56 by mhmichi          ###   ########.fr       */
+/*   Updated: 2026/09/02 12:32:26 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_string.h"
 #include <stdlib.h>
+#include <unistd.h>
+
+void	ft_putchar(char c)
+{
+	write(1, &c, 1);
+}
+
+void	ft_putstr(char *str)
+{
+	while (*str)
+		write(1, str++, 1);
+}
+
+int	ft_strlen(char *str)
+{
+	int	l;
+
+	l = 0;
+	while (str[l])
+		l++;
+	return (l);
+}
 
 char	ft_is_printable(char c)
 {
@@ -69,6 +91,24 @@ char	*ft_strstr(char *str, char *to_find, int *word_length)
 	}
 	*word_length = i;
 	return (str + i);
+}
+
+char	*ft_strdup(char *src)
+{
+	char			*dup;
+	unsigned int	i;
+
+	dup = (char *)malloc(ft_strlen(src) + 1);
+	if (dup == NULL)
+		return (NULL);
+	i = 0;
+	while (src[i])
+	{
+		dup[i] = src[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }
 
 char	*ft_strndup(char *src, unsigned int n)

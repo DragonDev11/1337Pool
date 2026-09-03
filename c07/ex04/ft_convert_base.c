@@ -6,7 +6,7 @@
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/25 22:15:05 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/08/31 09:27:21 by mhmichi          ###   ########.fr       */
+/*   Updated: 2026/09/01 15:04:23 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ int	is_valid_base(char *base)
 	return (1);
 }
 
-long	to_decimal(char *nbr, char *base)
+int	to_decimal(char *nbr, char *base)
 {
 	int	base_len;
-	long	result;
+	int	result;
 	int	start;
 	int	sign;
 
@@ -73,25 +73,31 @@ long	to_decimal(char *nbr, char *base)
 	start = get_start_index(nbr, base, &sign);
 	while (*(nbr + start))
 	{
+		if (is_in_array(*(nbr + start), base) == -1)
+			break ;
 		result = result * base_len + is_in_array(*(nbr + start), base);
 		start++;
 	}
 	return (result * sign);
 }
 
-int	to_base(long nbr, char *base, char **n)
+int	to_base(int nbr, char *base, char **n)
 {
 	int				base_len;
 	int				i;
-	unsigned long	unbr;
+	unsigned int	unbr;
 
 	i = 0;
 	if (nbr == 0)
-		(*n)[i++] = '0';
+	{
+		(*n)[i++] = base[0];
+		(*n)[i] = '\0';
+		return (i);
+	}
 	base_len = ft_strlen(base);
 	unbr = nbr;
 	if (nbr < 0)
-		unbr = -(unsigned long)nbr;
+		unbr = -(unsigned int)nbr;
 	while (i < 32 && unbr > 0)
 	{
 		(*n)[i] = base[unbr % base_len];
@@ -116,7 +122,7 @@ char	*ft_convert_base(char *nbr, char *base_from, char *base_to)
 		return (NULL);
 	p = n;
 	size = to_base(to_decimal(nbr, base_from), base_to, &p);
-	result = (char *)malloc(size);
+	result = (char *)malloc(size + 1);
 	if (result == NULL)
 		return (NULL);
 	i = size - 1;

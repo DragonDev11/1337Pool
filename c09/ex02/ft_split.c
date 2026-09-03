@@ -5,40 +5,39 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/28 10:35:28 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/09/01 16:19:06 by mhmichi          ###   ########.fr       */
+/*   Created: 2026/09/01 12:52:23 by mhmichi           #+#    #+#             */
+/*   Updated: 2026/09/02 02:34:58 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-int	ft_is_in_string(char c, char *str)
+char	ft_str_contains(char c, char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i])
-	{
-		if (str[i] == c)
-			return (i);
-		i++;
-	}
+		if (c == str[i++])
+			return (i - 1);
 	return (-1);
 }
 
-int	ft_count_words(char *str, char *charset)
+int	cw(char *str, char *charset, char **start)
 {
 	int	count;
 
 	count = 0;
-	while (*str && ft_is_in_string(*str, charset) != -1)
+	while (ft_str_contains(*str, charset) != -1 && *str)
 		str++;
+	(*start) = str;
 	while (*str)
 	{
-		if (ft_is_in_string(*str, charset) == -1
-			&& ft_is_in_string(*(str + 1), charset) != -1 && *(str + 1))
+		if (ft_str_contains(*str, charset) == -1
+			&& ft_str_contains(*(str + 1), charset) != -1
+			&& *(str + 1))
 			count++;
-		if (ft_is_in_string(*str, charset) == -1 && *(str + 1) == '\0')
+		if (ft_str_contains(*str, charset) == -1 && *(str + 1) == '\0')
 		{
 			count++;
 			break ;
@@ -48,20 +47,20 @@ int	ft_count_words(char *str, char *charset)
 	return (count);
 }
 
-char	*ft_this_function(char *str, char *to_find, int *word_length)
+char	*ft_strstr_plus(char *str, char *charset, int *word_len)
 {
 	int	i;
 
 	i = 0;
-	while (*str && ft_is_in_string(*str, to_find) != -1)
+	while (*str && ft_str_contains(*str, charset) != -1)
 		str++;
 	while (*(str + i))
 	{
-		if (ft_is_in_string(*(str + i), to_find) != -1)
+		if (ft_str_contains(*(str + i), charset) != -1)
 			break ;
 		i++;
 	}
-	*word_length = i;
+	*word_len = i;
 	return (str + i);
 }
 
@@ -70,11 +69,11 @@ char	*ft_strndup(char *src, unsigned int n)
 	char			*dup;
 	unsigned int	i;
 
-	dup = (char *)malloc(n + 1);
+	dup = malloc(sizeof(char) * (n + 1));
 	if (dup == NULL)
 		return (NULL);
 	i = 0;
-	while (i < n && src[i])
+	while (src[i] && i <= n)
 	{
 		dup[i] = src[i];
 		i++;
@@ -85,39 +84,42 @@ char	*ft_strndup(char *src, unsigned int n)
 
 char	**ft_split(char *str, char *charset)
 {
-	int		words;
 	char	**split;
+	int		size;
 	int		i;
-	int		word_length;
+	int		len;
 
-	words = ft_count_words(str, charset);
-	split = (char **)malloc(sizeof(char *) * (words + 1));
-	if (!split)
+	size = cw(str, charset, &str) + 1;
+	split = (char **)malloc(sizeof(char *) * size);
+	if (split == NULL)
 		return (NULL);
 	i = 0;
-	while (i < words)
+	while (i < size - 1)
 	{
-		str = ft_this_function(str, charset, &word_length);
-		if (word_length <= 0)
+		str = ft_strstr_plus(str, charset, &len);
+		if (len <= 0)
 			continue ;
-		str -= word_length;
-		split[i] = ft_strndup(str, word_length);
+		str -= len;
+		split[i] = ft_strndup(str, len - 1);
 		if (!split[i])
 			return (NULL);
-		str += word_length;
+		str += len + 1;
 		i++;
 	}
 	split[i] = NULL;
 	return (split);
 }
-
+/*
 #include <stdio.h>
 
 int main()
 {
-	char **split = ft_split("Hello world,Test;Hi", " ,;");
-	for (int i=0; i<3; i++)
-		printf("%s\n", split[i]);
+	char **split = ft_split(",,,,Hello      Earth    ;I;Love; you; <3", " ,;");
+	while (*split)
+	{
+		printf("%s\n", *(split));
+		split++;
+	}
 	return (0);
 }
-
+*/

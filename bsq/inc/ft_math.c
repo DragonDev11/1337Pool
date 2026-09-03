@@ -1,14 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_math.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhmichi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/19 11:35:36 by mhmichi           #+#    #+#             */
-/*   Updated: 2026/09/02 05:16:32 by mhmichi          ###   ########.fr       */
+/*   Created: 2026/09/02 12:20:18 by mhmichi           #+#    #+#             */
+/*   Updated: 2026/09/02 13:30:20 by mhmichi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_math.h"
+#include "ft_string.h"
+#include <unistd.h>
 
 int	get_start_index(char *str, int *sign)
 {
@@ -67,4 +71,29 @@ int	ft_atoi(char *str)
 		i++;
 	}
 	return (nb * sign);
+}
+
+void	ft_putnbr(int nb)
+{
+	if (nb < 0)
+	{
+		if (nb == -2147483648)
+		{
+			write(1, "-2147483648", 11);
+			return ;
+		}
+		nb *= -1;
+		ft_putchar('-');
+	}
+	if (nb >= 0 && nb <= 9)
+	{
+		ft_putchar(nb + 48);
+		return ;
+	}
+	if (nb > 9)
+	{
+		ft_putnbr(nb / 10);
+		ft_putnbr(nb % 10);
+	}
+	return ;
 }
